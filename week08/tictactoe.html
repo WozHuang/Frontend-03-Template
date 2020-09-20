@@ -1,0 +1,124 @@
+<html>
+  <head>
+    <title>tic tac toe</title>
+    <style>
+      #main {
+        /* background: green; */
+        /* border-bottom: 1px solid gray; */
+      }
+      .cell {
+        display: inline-block;
+        width: 100px;
+        height: 100px;
+        border-left: 1px solid gray;
+        border-top: 1px solid gray;
+        vertical-align: middle;
+        font-size: 50px;
+        line-height: 100px;
+        text-align: center;
+        user-select: none;
+      }
+      .cell:nth-of-type(3n) {
+        border-right: 1px solid gray;
+      }
+      .cell:nth-last-of-type(-n + 3) {
+        border-bottom: 1px solid gray;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="main"></div>
+    <script>
+      const row = 3,
+        column = 3;
+      let nextColor = 1;
+      function draw(pattern = []) {
+        const mainDiv = document.getElementById("main");
+        mainDiv.innerHTML = "";
+        for (let r = 0; r < row; r++) {
+          for (let c = 0; c < column; c++) {
+            const el = document.createElement("div");
+            el.classList.add("cell");
+            el.innerText =
+              pattern[r * column + c] === 2
+                ? "X"
+                : pattern[r * column + c] === 1
+                ? "O"
+                : "";
+            el.addEventListener("click", () => {
+              console.log("click", 123);
+              move(pattern, r, c);
+            });
+            mainDiv.appendChild(el);
+          }
+          mainDiv.appendChild(document.createElement("br"));
+        }
+      }
+
+      function move(pattern, r, c) {
+        pattern[r * column + c] = nextColor;
+        if (checkWin(pattern)) {
+          console.log(nextColor, "win");
+        }
+        nextColor = 3 - nextColor;
+        draw(pattern);
+      }
+
+      function checkWin(pattern) {
+        for (let r = 0; r < row; r++) {
+          let win = true;
+          for (let c = 0; c < column; c++) {
+            if (pattern[r * column + c] !== nextColor) {
+              win = false;
+              break;
+            }
+          }
+          if (win) {
+            return win;
+          }
+        }
+        for (let c = 0; c < column; c++) {
+          let win = true;
+          for (let r = 0; r < row; r++) {
+            if (pattern[r * column + c] !== nextColor) {
+              win = false;
+              break;
+            }
+          }
+          if (win) {
+            return win;
+          }
+        }
+        {
+          let win = true;
+          for (let r = 0; r < row; r++) {
+            if (pattern[r + r * column] !== nextColor) {
+              win = false;
+              break;
+            }
+          }
+          if (win) {
+            return win;
+          }
+        }
+        {
+          let win = true;
+          for (let r = 0; r < row; r++) {
+            if (pattern[r + (row - 1 - r) * column] !== nextColor) {
+              win = false;
+              break;
+            }
+          }
+          if (win) {
+            return win;
+          }
+        }
+      }
+
+      (function main() {
+        let pattern = Array.from({ length: 9 }).fill(0);
+        draw(pattern, row, column);
+      })();
+    </script>
+  </body>
+</html>
